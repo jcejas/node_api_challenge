@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  id          Int        @id @default(autoincrement())
+  name        String?    @db.Char(150)
+  description String?    @db.VarChar(255)
+  products    products[]
+}
+
+model order_details {
+  id         Int      @id @default(autoincrement())
+  order_id   Int
+  product_id Int
+  price      Float    @db.Float
+  quantity   Int?
+  orders     orders   @relation(fields: [order_id], references: [id], onUpdate: Restrict, map: "order_id_fk")
+  products   products @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "product_id_fk")
+
+  @@index([order_id], map: "order_id_fk_idx")
+  @@index([product_id], map: "product_id_fk")
+}
+
+model orders {
+  id            Int             @id @default(autoincrement())
+  customer_id   Int
+  ammount       Float           @db.Float
+  order_date    DateTime        @db.DateTime(0)
+  order_status  Int             @default(0) @db.TinyInt
+  users         users           @relation(fields: [customer_id], references: [id], onUpdate: Restrict, map: "customer_id_fk")
+  order_details order_details[]
+
+  @@index([customer_id], map: "customer_id_fk")
+}
+
+model products {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.Char(255)
+  price         Float           @db.Float
+  description   String?         @db.VarChar(255)
+  url_image     String?         @db.Char(150)
+  category_id   Int
+  stock         Int?
+  categories    categories      @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "category_id_fk")
+  order_details order_details[]
+
+  @@index([category_id], map: "category_id_fk")
+}
+
+model users {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique(map: "email_UNIQUE") @db.Char(150)
+  password  String   @db.Char(255)
+  full_name String?  @db.VarChar(150)
+  url_image String?  @db.Char(150)
+  role      String   @db.Char(50)
+  orders    orders[]
+}
