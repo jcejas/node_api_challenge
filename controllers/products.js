@@ -27,6 +27,7 @@ productController.createProduct = async (req, res) => {
 
     let body = matchedData(req);
 
+    //Upload File for Cloudinary
     if (req.files?.image) {
 
         let result = await uploadFile(req.files.image.tempFilePath);
