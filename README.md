@@ -1,1 +1,10 @@
-https://docs.google.com/document/d/1d38WwQdZ6pnoKmn45yn1CpH7wbf0droS3UOHomgM7EA/edit?usp=sharing
+# Getting Started
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Start server in [http://localhost:3000](http://localhost:3000).
